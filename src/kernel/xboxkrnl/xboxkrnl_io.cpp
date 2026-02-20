@@ -782,6 +782,15 @@ dword_result_t StfsControlDevice_entry(lpvoid_t device_object, dword_t ioctl,
   return X_STATUS_SUCCESS;
 }
 
+dword_result_t NtCancelIoFile_entry(dword_t handle) {
+  auto file = kernel_state()->object_table()->LookupObject<XFile>(handle);
+  if (!file) {
+    return X_STATUS_INVALID_HANDLE;
+  }
+
+  return X_STATUS_SUCCESS;
+}
+
 }  // namespace rex::kernel::xboxkrnl
 
 GUEST_FUNCTION_HOOK(__imp__NtCreateFile, rex::kernel::xboxkrnl::NtCreateFile_entry)
@@ -806,3 +815,4 @@ GUEST_FUNCTION_HOOK(__imp__IoDismountVolumeByName, rex::kernel::xboxkrnl::IoDism
 GUEST_FUNCTION_HOOK(__imp__IoSynchronousDeviceIoControlRequest, rex::kernel::xboxkrnl::IoSynchronousDeviceIoControlRequest_entry)
 GUEST_FUNCTION_HOOK(__imp__StfsCreateDevice, rex::kernel::xboxkrnl::StfsCreateDevice_entry)
 GUEST_FUNCTION_HOOK(__imp__StfsControlDevice, rex::kernel::xboxkrnl::StfsControlDevice_entry)
+GUEST_FUNCTION_HOOK(__imp__NtCancelIoFile, rex::kernel::xboxkrnl::NtCancelIoFile_entry)
